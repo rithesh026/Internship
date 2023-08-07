@@ -1,0 +1,92 @@
+import java.util.Scanner;
+
+public class ATMInterface {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Create an instance of the ATM class
+        ATM atm = new ATM();
+        
+        System.out.println("Welcome to the ATM!");
+        System.out.print("Enter your account number: ");
+        int accountNumber = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        
+        // Authenticate the user
+        if (atm.authenticateUser(accountNumber)) {
+            boolean exit = false;
+            while (!exit) {
+                System.out.println("\nSelect an option:");
+                System.out.println("1. Check Balance");
+                System.out.println("2. Deposit Money");
+                System.out.println("3. Withdraw Money");
+                System.out.println("4. Exit");
+                System.out.print("Choice: ");
+                
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+                
+                switch (choice) {
+                    case 1:
+                        System.out.println("Your balance is: $" + atm.checkBalance());
+                        break;
+                    case 2:
+                        System.out.print("Enter the amount to deposit: $");
+                        double depositAmount = scanner.nextDouble();
+                        atm.deposit(depositAmount);
+                        System.out.println("Deposit successful.");
+                        break;
+                    case 3:
+                        System.out.print("Enter the amount to withdraw: $");
+                        double withdrawAmount = scanner.nextDouble();
+                        if (atm.withdraw(withdrawAmount)) {
+                            System.out.println("Withdrawal successful.");
+                        } else {
+                            System.out.println("Insufficient funds.");
+                        }
+                        break;
+                    case 4:
+                        exit = true;
+                        System.out.println("Thank you for using the ATM. Goodbye!");
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please select a valid option.");
+                }
+            }
+        } else {
+            System.out.println("Invalid account number. Exiting...");
+        }
+        
+        scanner.close();
+    }
+}
+
+class ATM {
+    private int accountNumber = 123456; // Sample account number
+    private double balance = 1000.0;   // Sample initial balance
+    
+    // Authenticates the user based on the provided account number
+    public boolean authenticateUser(int enteredAccountNumber) {
+        return enteredAccountNumber == accountNumber;
+    }
+    
+    // Returns the current account balance
+    public double checkBalance() {
+        return balance;
+    }
+    
+    // Deposits the specified amount into the account
+    public void deposit(double amount) {
+        balance += amount;
+    }
+    
+    // Withdraws the specified amount from the account if sufficient funds are available
+    public boolean withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
